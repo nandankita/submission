@@ -1,0 +1,34 @@
+randomForest 4.7-1.1
+Type rfNews() to see new features/changes/bug fixes.
+Registered S3 method overwritten by 'spatstat.core':
+  method          from
+  formula.glmmPQL MASS
+Attaching SeuratObject
+Attaching sp
+[1] "expression matrix"
+5 x 5 sparse Matrix of class "dgCMatrix"
+                 PPBP    IGLL5 PF4 GNG11 CLU
+AAACATACACCCAA-1    .  .         .     .   .
+AAACATACCCCTCA-1    .  .         .     .   .
+AAACATACCGGAGA-1    .  .         .     .   .
+AAACATACTAACCG-1    . 13.61593   .     .   .
+AAACATACTCTTCA-1    .  .         .     .   .
+[1] 68579  1000
+Warning message:
+In fread("../clusters.tsv") :
+  Detected 4 column names but the data has 5 columns (i.e. invalid file). Added 1 extra default column name for the first column which is guessed to be row names or an index. Use setnames() afterwards if this guess is not correct, or fix the file write command that created the file to create a valid file.
+[1] "clusters"
+                 V1        X1         X2                       cls_id  k
+1: AAACATACACCCAA-1 -8.404410 -13.762802             CD8+ Cytotoxic T  5
+2: AAACATACCCCTCA-1 -9.108612  16.788004 CD8+/CD45RA+ Naive Cytotoxic  7
+3: AAACATACCGGAGA-1  5.554653 -16.821025              CD4+/CD25 T Reg  2
+4: AAACATACTAACCG-1 27.941230  -4.803931                      CD19+ B 10
+5: AAACATACTCTTCA-1 11.497954  17.445821              CD4+/CD25 T Reg  4
+6: AAACATACTGGATC-1 10.201142  11.115230              CD4+/CD25 T Reg  4
+[1] "training"
+[1] "predictions"
+x being coerced from class: matrix to data.table
+Accuracy: 0.03448527 
+Precision: 0 
+Recall: 0 
+F1-Score: NaN 
