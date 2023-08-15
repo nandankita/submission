@@ -1,45 +1,48 @@
-# Load required libraries
-library(randomForest)
-library(Matrix)
-library(Seurat)
-library(data.table)
+#Load libraries
 
+library(Matrix)
+library(data.table)
+library("rpart")
+library("rpart.plot")
+
+
+#Load expression matrix and cluster information
 load("../exprMatrix.RData")
 print("expression matrix")
 print(m_n_1000[1:5,1:5])
 print(dim(m_n_1000))
-data<-as.matrix(m_n_1000)
 
-# Label the data
+data<-as.matrix(m_n_1000)
 clusters<-fread("../clusters.tsv")
 print("clusters")
 head(clusters)
 labels <- as.numeric(as.factor(clusters$cls_id))
+head(labels)
+
+#Divide training and testing data
+tr <- sample(nrow(data), round(nrow(data) * 0.6))
+head(tr)
+data<-data.frame(as.matrix(m_n_1000))
+data[1:5,1:5]
+train <- data[tr, ]
+test <- data[-tr, ]
+train_labels <- labels[tr]
+test_labels <- labels[-tr]
+
+m_train<-data.frame(cbind(train, train_labels))
+m_test<-data.frame(cbind(test, test_labels))
 
 
-train_indices <- sample(1:nrow(data), 0.8 * nrow(data))
-train_data <- data[train_indices, ]
-train_labels <- labels[train_indices]
-test_data <- data[-train_indices, ]
-test_labels <- labels[-train_indices]
+#Construct model
+m <- rpart(train_labels ~ ., data = m_train,method = "class")
 
-# Train a Random Forest classifier
-print("training")
-rf_model <- randomForest(train_data, train_labels, ntree = 100)
-saveRDS(rf_model, "rf_model.rds")
-# Make predictions
-print("predictions")
-predictions <- predict(rf_model, test_data)
-# Evaluate the model
-accuracy <- sum(predictions == test_labels) / length(test_labels)
-conf_matrix <- table(predictions, test_labels)
-fwrite(conf_matrix,"conf_matrix.matrix",sep="\t")
-precision <- conf_matrix[2, 2] / sum(conf_matrix[, 2])
-recall <- conf_matrix[2, 2] / sum(conf_matrix[2, ])
-f1_score <- 2 * (precision * recall) / (precision + recall)
-# Print evaluation metrics
-cat("Accuracy:", accuracy, "\n")
-cat("Precision:", precision, "\n")
-cat("Recall:", recall, "\n")
-cat("F1-Score:", f1_score, "\n")
+#plot tree
+png(file="tree.png")
+rpart.plot(m)
+dev.off()
 
+#predict on test data
+p <- predict(m, m_test, type = "class")
+
+#confusion matrix
+table(p, m_test$test_labels)
