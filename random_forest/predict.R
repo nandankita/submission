@@ -4,7 +4,7 @@ library(Matrix)
 library(data.table)
 library("rpart")
 library("rpart.plot")
-
+library(caret)
 
 #Load expression matrix and cluster information
 load("../exprMatrix.RData")
@@ -46,3 +46,5 @@ p <- predict(m, m_test, type = "class")
 
 #confusion matrix
 table(p, m_test$test_labels)
+
+confusionMatrix(factor(p), factor(m_test$test_labels))
